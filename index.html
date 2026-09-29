@@ -7,59 +7,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Caja de herramientas de marketing analytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#F6F8FB; --grid:#DCE5F0; --sheet:#FFFFFF; --ink:#13294B; --muted:#4A5B78;
-  --win:#0E8A5F; --lose:#B3261E; --mark:#FFE45C; --console:#13294B; --console-ink:#E6ECF5; --console-dim:#9FB0C8;
+  --bg:#F5F6FA; --surface:#FFFFFF; --surface-alt:#F1F3F8; --border:#E4E7EF;
+  --ink:#12172B; --muted:#697086; --accent:#4F46E5; --accent-ink:#FFFFFF; --accent-tint:#EEF0FE;
+  --win:#12875C; --lose:#C4291C; --mark:#EEF0FE;
+  --console:#12172B; --console-alt:#1B2138; --console-ink:#E9ECF6; --console-dim:#8D96B3;
+  --radius:16px; --radius-sm:10px; --shadow:0 1px 2px rgba(18,23,43,.04),0 6px 20px -8px rgba(18,23,43,.12);
   box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0F1A2E;--grid:#1B2A44;--sheet:#15223A;--ink:#E6ECF5;--muted:#9FB0C8;--win:#3DDC97;--lose:#FF8A80;--console:#08111F;}}
-:root[data-theme="dark"]{--paper:#0F1A2E;--grid:#1B2A44;--sheet:#15223A;--ink:#E6ECF5;--muted:#9FB0C8;--win:#3DDC97;--lose:#FF8A80;--console:#08111F;}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B0E19; --surface:#141a2c; --surface-alt:#1A2136; --border:#262E48;
+  --ink:#E9ECF6; --muted:#9AA3C0; --accent:#8B87F7; --accent-ink:#12172B; --accent-tint:#20233F;
+  --win:#3ED991; --lose:#FF8A80; --mark:#20233F;
+  --console:#080B14; --console-alt:#10152A; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.55);
+}}
+:root[data-theme="dark"]{
+  --bg:#0B0E19; --surface:#141a2c; --surface-alt:#1A2136; --border:#262E48;
+  --ink:#E9ECF6; --muted:#9AA3C0; --accent:#8B87F7; --accent-ink:#12172B; --accent-tint:#20233F;
+  --win:#3ED991; --lose:#FF8A80; --mark:#20233F;
+  --console:#080B14; --console-alt:#10152A; --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -12px rgba(0,0,0,.55);
+}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:inherit}
-body{margin:0;color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;background-color:var(--paper);
-  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
-h1,h2{font-family:Sora,"IBM Plex Sans",sans-serif;margin:0;line-height:1.15}
-header{padding:2.5rem 1.25rem 1.5rem;max-width:72rem;margin:0 auto}
-header h1{font-size:clamp(1.9rem,5vw,3.2rem);font-weight:800;max-width:18ch}
-header p{max-width:62ch;color:var(--muted);margin:.75rem 0 0}
-.modo{display:inline-block;margin-top:1rem;padding:.15rem .55rem;background:var(--mark);color:#13294B;font-weight:600;font-size:.9rem}
+body{margin:0;color:var(--ink);font:15px/1.6 "IBM Plex Sans",system-ui,sans-serif;background:var(--bg)}
+h1,h2,h3{font-family:Sora,"IBM Plex Sans",sans-serif;margin:0;line-height:1.2;letter-spacing:-.01em}
+header{padding:3rem 1.25rem 1.75rem;max-width:72rem;margin:0 auto}
+header h1{font-size:clamp(1.8rem,4.2vw,2.75rem);font-weight:800;max-width:20ch}
+header p{max-width:60ch;color:var(--muted);margin:.85rem 0 0;font-size:1.02rem}
+.modo{display:inline-flex;align-items:center;gap:.45rem;margin-top:1.25rem;padding:.35rem .8rem .35rem .6rem;background:var(--accent-tint);color:var(--accent);font-weight:600;font-size:.82rem;border-radius:999px}
+.modo::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:currentColor}
 .layout{max-width:72rem;margin:0 auto;padding:0 1.25rem 3rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:1.5rem;align-items:start}
 @media (max-width:960px){.layout{grid-template-columns:1fr}}
-.sheets{display:grid;gap:1.5rem}
-.sheet{background:var(--sheet);border:1.5px solid var(--ink);padding:1.25rem}
-.sheet h2{font-size:1.3rem;font-weight:600}
-.sheet > p{color:var(--muted);margin:.3rem 0 1rem;max-width:62ch}
-form .campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.75rem}
-label{display:grid;gap:.2rem;font-size:.9rem;font-weight:600}
-input,select{font:inherit;font-weight:400;padding:.45rem .5rem;border:1.5px solid var(--muted);background:var(--paper);color:var(--ink);width:100%;font-variant-numeric:tabular-nums}
-button{font:inherit;font-weight:600;cursor:pointer;border:1.5px solid var(--ink);background:var(--ink);color:var(--sheet);padding:.45rem 1rem;margin-top:1rem}
-button.sec{background:transparent;color:var(--ink);margin-left:.5rem}
-:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
-form.agent-active{outline:3px dashed var(--mark);outline-offset:6px}
-.res{margin-top:1.25rem;border-top:1.5px dashed var(--muted);padding-top:1rem;min-height:1.5rem}
-.res:empty::before{content:"Completa los datos y calcula.";color:var(--muted);font-size:.9rem}
-.res dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.9rem;margin:0}
-.res dt{font-size:.82rem;color:var(--muted)}
-.res dd{margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:1.45rem;font-variant-numeric:tabular-nums}
-.res .lectura{margin:1rem 0 0;padding-left:.8rem;border-left:4px solid var(--mark);max-width:62ch}
+.sheets{display:grid;gap:1.25rem}
+.sheet{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:1.5rem}
+.sheet h2{font-size:1.15rem;font-weight:700}
+.sheet > p{color:var(--muted);margin:.35rem 0 1.15rem;max-width:60ch;font-size:.92rem}
+form .campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.85rem}
+label{display:grid;gap:.3rem;font-size:.82rem;font-weight:600;color:var(--muted)}
+input,select{font:inherit;font-weight:400;color:var(--ink);padding:.55rem .65rem;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-alt);width:100%;font-variant-numeric:tabular-nums;transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-tint)}
+button{font:inherit;font-weight:600;font-size:.92rem;cursor:pointer;border:1px solid var(--accent);border-radius:var(--radius-sm);background:var(--accent);color:var(--accent-ink);padding:.55rem 1.15rem;margin-top:1.1rem;transition:opacity .15s,transform .05s}
+button:hover{opacity:.9}
+button:active{transform:translateY(1px)}
+button.sec{background:transparent;color:var(--ink);border-color:var(--border);margin-left:.5rem}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+form.agent-active{outline:3px dashed var(--accent);outline-offset:6px;border-radius:var(--radius-sm)}
+.res{margin-top:1.25rem;border-top:1px solid var(--border);padding-top:1.1rem;min-height:1.5rem}
+.res:empty::before{content:"Completa los datos y calcula.";color:var(--muted);font-size:.88rem}
+.res dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:1rem;margin:0}
+.res dt{font-size:.78rem;color:var(--muted)}
+.res dd{margin:.15rem 0 0;font-family:Sora,sans-serif;font-weight:700;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.res .lectura{margin:1rem 0 0;padding:.75rem 1rem;border-radius:var(--radius-sm);background:var(--surface-alt);border-left:3px solid var(--accent);max-width:62ch;font-size:.9rem;color:var(--muted)}
 .res .win{color:var(--win)} .res .lose{color:var(--lose)}
-.res .url{font-size:.95rem;word-break:break-all;background:var(--paper);padding:.6rem;border:1px solid var(--grid)}
+.res .url{font-size:.9rem;word-break:break-all;background:var(--surface-alt);padding:.7rem .8rem;border-radius:var(--radius-sm);border:1px solid var(--border)}
 .flash{animation:flash .8s ease-out}@keyframes flash{from{background:var(--mark)}to{background:transparent}}
 @media (prefers-reduced-motion:reduce){.flash{animation:none}}
-aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1rem);background:var(--console);color:var(--console-ink);padding:1.25rem;border:1.5px solid var(--ink)}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1rem);background:var(--console);color:var(--console-ink);padding:1.5rem;border-radius:var(--radius);box-shadow:var(--shadow)}
 @media (max-width:960px){aside{position:static}}
-aside h2{font-size:1.15rem}
-aside p,aside li{color:var(--console-dim);font-size:.88rem}
+aside h2{font-size:1.05rem;font-weight:700}
+aside h3{font-size:.88rem;font-weight:600;color:var(--console-ink);margin:1.4rem 0 .3rem}
+aside p,aside li{color:var(--console-dim);font-size:.86rem}
 aside ul{padding-left:1.1rem;margin:.4rem 0 1rem}
-aside label{color:var(--console-ink);margin-top:.6rem}
-aside select,aside textarea{width:100%;background:#0006;color:var(--console-ink);border:1px solid var(--console-dim);padding:.5rem;font:.82rem/1.4 ui-monospace,Menlo,Consolas,monospace}
-aside textarea{min-height:7rem;resize:vertical}
-aside button{background:var(--mark);color:#13294B;border-color:var(--mark)}
-.log{margin-top:1rem;display:grid;gap:.45rem;max-height:22rem;overflow:auto}
-.log pre{margin:0;white-space:pre-wrap;word-break:break-word;font:.75rem/1.4 ui-monospace,Menlo,Consolas,monospace;background:#0008;padding:.5rem;border-left:3px solid var(--console-dim)}
-.log pre.ok{border-color:#3DDC97}.log pre.err{border-color:#FF8A80}.log pre.dl{border-color:var(--mark)}
+aside label{color:var(--console-ink);margin-top:.7rem;font-size:.8rem}
+aside select,aside textarea{width:100%;background:var(--console-alt);color:var(--console-ink);border:1px solid #ffffff1a;border-radius:var(--radius-sm);padding:.55rem .6rem;font:.82rem/1.4 ui-monospace,Menlo,Consolas,monospace}
+aside textarea{min-height:6.5rem;resize:vertical}
+aside button{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);border-radius:var(--radius-sm)}
+.resumen-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:.5rem 0 .25rem}
+.resumen-chips .vacio{color:var(--console-dim);font-size:.82rem;margin:0}
+.chip{background:var(--console-alt);border:1px solid #ffffff1a;color:var(--console-ink);padding:.35rem .65rem;border-radius:999px;font-size:.75rem;line-height:1.3}
+.chip b{color:var(--console-ink);font-weight:600}
+.log{margin-top:1rem;display:grid;gap:.5rem;max-height:20rem;overflow:auto}
+.log pre{margin:0;white-space:pre-wrap;word-break:break-word;font:.74rem/1.45 ui-monospace,Menlo,Consolas,monospace;background:#00000055;padding:.6rem .7rem;border-radius:var(--radius-sm);border-left:3px solid var(--console-dim)}
+.log pre.ok{border-color:var(--win)}.log pre.err{border-color:var(--lose)}.log pre.dl{border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -167,7 +188,13 @@ aside button{background:var(--mark);color:#13294B;border-color:var(--mark)}
     <li>“Invertí 3 000 soles, tuve 126 ventas por 11 340 soles. ¿Cuál es mi ROAS?”</li>
     <li>“Arma las UTMs para mi campaña de email del Cyber.”</li>
     <li>“A tuvo 150 de 5 000 y B 190 de 5 000. ¿Ganó B?”</li>
+    <li>“Calcula el ROAS y el LTV/CAC, y dime si van en la misma dirección.”</li>
   </ul>
+
+  <h3>Resumen de la sesión</h3>
+  <p>Lo que ya se calculó, para que el agente combine datos entre herramientas con <code>resumen_sesion</code>, sin backend ni API keys de por medio.</p>
+  <div class="resumen-chips" id="resumenSesion"><p class="vacio">Aún no hay cálculos en esta sesión.</p></div>
+
   <label for="selTool">Herramienta</label>
   <select id="selTool"></select>
   <label for="args">Argumentos (JSON)</label>
@@ -239,6 +266,20 @@ function pintar(id, filas, lectura = [], extra = "") {
   el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
 }
 
+/* ===== 1b. Memoria de sesión — comparte resultados entre herramientas para el agente ===== */
+const SESION = {};
+function guardarSesion(etiqueta, filas, lectura) {
+  SESION[etiqueta] = { ts: Date.now(), filas, lectura };
+  pintarResumenSesion();
+}
+function pintarResumenSesion() {
+  const cont = $("resumenSesion");
+  const entradas = Object.entries(SESION);
+  cont.innerHTML = entradas.length
+    ? entradas.map(([etiqueta, d]) => `<span class="chip"><b>${etiqueta}:</b> ${d.filas.slice(0, 2).map((f) => f[1]).join(" · ") || "ok"}</span>`).join("")
+    : '<p class="vacio">Aún no hay cálculos en esta sesión.</p>';
+}
+
 /* ===== 2. Cálculos (funciones puras, las usan la UI y el agente) ===== */
 function metricas(a) {
   const inv = num(a.inversion), imp = num(a.impresiones), cl = num(a.clics), conv = num(a.conversiones), ing = num(a.ingresos);
@@ -276,7 +317,7 @@ function vistaLtv(r) {
 
 const MEDIUMS = ["cpc", "cpm", "display", "email", "social", "paid_social", "organic", "referral", "affiliate", "video", "sms", "push", "audio"];
 function utm(a) {
-  const norm = (s) => String(s || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+  const norm = (s) => String(s || "").trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, "_");
   if (!a.source || !a.medium || !a.campaign) return { ok: false, error: "source, medium y campaign son obligatorios." };
   let u; try { u = new URL(String(a.url).trim()); } catch { return { ok: false, error: "La URL no es válida. Escríbela completa, con https://" }; }
   const avisos = [];
@@ -325,22 +366,22 @@ function vistaMuestra(r) {
 /* ===== 3. Registro: UI + herramientas imperativas desde una sola tabla ===== */
 const num_ = (description, extra = {}) => ({ type: "number", description, ...extra });
 const HERRAMIENTAS = [
-  { name: "calcular_metricas_campana", form: "f-metricas", out: "r-metricas", fn: metricas, vista: vistaMetricas,
+  { name: "calcular_metricas_campana", label: "Métricas", form: "f-metricas", out: "r-metricas", fn: metricas, vista: vistaMetricas,
     description: "Calcula CTR, CPC, CPM, tasa de conversión, CPA, ROAS y ROI de una campaña. Montos en soles.",
     schema: { inversion: num_("Inversión publicitaria"), impresiones: num_("Impresiones"), clics: num_("Clics"),
       conversiones: num_("Conversiones o ventas"), ingresos: num_("Ingresos atribuidos") }, required: [] },
-  { name: "calcular_ltv_cac", form: "f-ltv", out: "r-ltv", fn: ltvCac, vista: vistaLtv,
+  { name: "calcular_ltv_cac", label: "LTV/CAC", form: "f-ltv", out: "r-ltv", fn: ltvCac, vista: vistaLtv,
     description: "Calcula LTV basado en margen, CAC, la relación LTV/CAC y los meses de payback.",
     schema: { ticket_promedio: num_("Valor promedio de compra"), compras_por_anio: num_("Compras por cliente al año"),
       margen_pct: num_("Margen bruto en porcentaje, 0 a 100"), anios_retencion: num_("Años que el cliente sigue comprando"),
       inversion_adquisicion: num_("Gasto total en adquirir clientes"), clientes_nuevos: num_("Clientes nuevos obtenidos") },
     required: ["ticket_promedio", "compras_por_anio", "margen_pct", "anios_retencion"] },
-  { name: "evaluar_prueba_ab", form: "f-ab", out: "r-ab", fn: abTest, vista: vistaAb,
+  { name: "evaluar_prueba_ab", label: "Prueba A/B", form: "f-ab", out: "r-ab", fn: abTest, vista: vistaAb,
     description: "Evalúa si la diferencia de conversión entre las variantes A y B es estadísticamente significativa (prueba z de dos proporciones).",
     schema: { visitantes_a: num_("Visitantes de A"), conversiones_a: num_("Conversiones de A"), visitantes_b: num_("Visitantes de B"),
       conversiones_b: num_("Conversiones de B"), confianza: num_("Nivel de confianza", { enum: [90, 95, 99] }) },
     required: ["visitantes_a", "conversiones_a", "visitantes_b", "conversiones_b"] },
-  { name: "calcular_tamano_muestra_ab", form: "f-muestra", out: "r-muestra", fn: muestra, vista: vistaMuestra,
+  { name: "calcular_tamano_muestra_ab", label: "Muestra A/B", form: "f-muestra", out: "r-muestra", fn: muestra, vista: vistaMuestra,
     description: "Calcula cuántos visitantes por variante necesita una prueba A/B y cuántos días tomará.",
     schema: { tasa_base_pct: num_("Tasa de conversión actual en porcentaje"), mejora_minima_pct: num_("Mejora relativa mínima a detectar, en porcentaje"),
       confianza: num_("Nivel de confianza", { enum: [90, 95, 99] }), potencia: num_("Potencia estadística", { enum: [80, 90] }),
@@ -352,6 +393,7 @@ function correr(h, fuente) {
   const r = h.fn(datos($(h.form)));
   if (r.ok === false) { pintar(h.out, [], [r.error]); return r; }
   const [filas, lectura] = h.vista(r); pintar(h.out, filas, lectura);
+  guardarSesion(h.label, filas, lectura);
   return r;
 }
 HERRAMIENTAS.forEach((h) => {
@@ -370,12 +412,36 @@ HERRAMIENTAS.forEach((h) => {
   });
 });
 
+/* Herramienta de memoria: combina lo calculado por las demás, sin llamar a ningún LLM propio */
+navigator.modelContext.registerTool({
+  name: "resumen_sesion",
+  description: "Devuelve todos los resultados calculados en esta sesión del navegador (métricas de campaña, LTV/CAC, UTM, prueba A/B, tamaño de muestra) para compararlos o combinarlos en una respuesta. Llama primero a las otras herramientas si todavía no hay datos que resumir.",
+  inputSchema: { type: "object", properties: {}, required: [] },
+  annotations: { readOnlyHint: true },
+  execute: async () => {
+    const entradas = Object.entries(SESION);
+    if (!entradas.length) return { ok: false, mensaje: "Todavía no se calculó nada en esta sesión. Usa primero otra herramienta." };
+    return {
+      ok: true,
+      calculos: entradas.map(([etiqueta, d]) => ({
+        herramienta: etiqueta,
+        hace_segundos: Math.round((Date.now() - d.ts) / 1000),
+        resultados: Object.fromEntries(d.filas.map(([k, v]) => [k, v])),
+        lectura: d.lectura
+      }))
+    };
+  }
+});
+
 /* ===== 4. UTM: formulario declarativo, sirve igual a humanos y agentes ===== */
 $("f-utm").addEventListener("submit", (e) => {
   e.preventDefault();
   const r = utm(datos(e.target));
   if (!r.ok) pintar("r-utm", [], [r.error]);
-  else pintar("r-utm", [], r.avisos, `<div class="url" id="utmUrl">${r.url.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div><button type="button" class="sec" id="copiar" style="margin-left:0">Copiar URL</button>`);
+  else {
+    pintar("r-utm", [], r.avisos, `<div class="url" id="utmUrl">${r.url.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div><button type="button" class="sec" id="copiar" style="margin-left:0">Copiar URL</button>`);
+    guardarSesion("UTM", [["URL", r.url.length > 42 ? r.url.slice(0, 42) + "…" : r.url]], r.avisos);
+  }
   $("copiar")?.addEventListener("click", async () => {
     try { await navigator.clipboard.writeText(r.url); $("copiar").textContent = "URL copiada"; } catch { $("copiar").textContent = "Selecciona y copia manualmente"; }
   });
@@ -389,7 +455,8 @@ const EJEMPLOS = {
   calcular_ltv_cac: { ticket_promedio: 120, compras_por_anio: 4, margen_pct: 35, anios_retencion: 2, inversion_adquisicion: 9000, clientes_nuevos: 80 },
   construir_utm: { url: "https://www.ejemplo.pe/cyber", source: "Newsletter", medium: "email", campaign: "Cyber Octubre", content: "boton_hero" },
   evaluar_prueba_ab: { visitantes_a: 5000, conversiones_a: 150, visitantes_b: 5000, conversiones_b: 190, confianza: 95 },
-  calcular_tamano_muestra_ab: { tasa_base_pct: 3, mejora_minima_pct: 20, confianza: 95, potencia: 80, trafico_diario: 1200 }
+  calcular_tamano_muestra_ab: { tasa_base_pct: 3, mejora_minima_pct: 20, confianza: 95, potencia: 80, trafico_diario: 1200 },
+  resumen_sesion: {}
 };
 function log(t, c) { const p = document.createElement("pre"); p.className = c; p.textContent = t; $("log").prepend(p); }
 const ponerEjemplo = () => { $("args").value = JSON.stringify(EJEMPLOS[$("selTool").value] || {}, null, 2); };
