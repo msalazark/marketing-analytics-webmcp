@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<!-- Si registras un origin trial de WebMCP para tu dominio, pega aquí el token:
+<meta http-equiv="origin-trial" content="TU_TOKEN"> -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caja de herramientas de marketing analytics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;800&family=IBM+Plex+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F8FB; --grid:#DCE5F0; --sheet:#FFFFFF; --ink:#13294B; --muted:#4A5B78;
+  --win:#0E8A5F; --lose:#B3261E; --mark:#FFE45C; --console:#13294B; --console-ink:#E6ECF5; --console-dim:#9FB0C8;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0F1A2E;--grid:#1B2A44;--sheet:#15223A;--ink:#E6ECF5;--muted:#9FB0C8;--win:#3DDC97;--lose:#FF8A80;--console:#08111F;}}
+:root[data-theme="dark"]{--paper:#0F1A2E;--grid:#1B2A44;--sheet:#15223A;--ink:#E6ECF5;--muted:#9FB0C8;--win:#3DDC97;--lose:#FF8A80;--console:#08111F;}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;background-color:var(--paper);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+h1,h2{font-family:Sora,"IBM Plex Sans",sans-serif;margin:0;line-height:1.15}
+header{padding:2.5rem 1.25rem 1.5rem;max-width:72rem;margin:0 auto}
+header h1{font-size:clamp(1.9rem,5vw,3.2rem);font-weight:800;max-width:18ch}
+header p{max-width:62ch;color:var(--muted);margin:.75rem 0 0}
+.modo{display:inline-block;margin-top:1rem;padding:.15rem .55rem;background:var(--mark);color:#13294B;font-weight:600;font-size:.9rem}
+.layout{max-width:72rem;margin:0 auto;padding:0 1.25rem 3rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,22rem);gap:1.5rem;align-items:start}
+@media (max-width:960px){.layout{grid-template-columns:1fr}}
+.sheets{display:grid;gap:1.5rem}
+.sheet{background:var(--sheet);border:1.5px solid var(--ink);padding:1.25rem}
+.sheet h2{font-size:1.3rem;font-weight:600}
+.sheet > p{color:var(--muted);margin:.3rem 0 1rem;max-width:62ch}
+form .campos{display:grid;grid-template-columns:repeat(auto-fit,minmax(10rem,1fr));gap:.75rem}
+label{display:grid;gap:.2rem;font-size:.9rem;font-weight:600}
+input,select{font:inherit;font-weight:400;padding:.45rem .5rem;border:1.5px solid var(--muted);background:var(--paper);color:var(--ink);width:100%;font-variant-numeric:tabular-nums}
+button{font:inherit;font-weight:600;cursor:pointer;border:1.5px solid var(--ink);background:var(--ink);color:var(--sheet);padding:.45rem 1rem;margin-top:1rem}
+button.sec{background:transparent;color:var(--ink);margin-left:.5rem}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+form.agent-active{outline:3px dashed var(--mark);outline-offset:6px}
+.res{margin-top:1.25rem;border-top:1.5px dashed var(--muted);padding-top:1rem;min-height:1.5rem}
+.res:empty::before{content:"Completa los datos y calcula.";color:var(--muted);font-size:.9rem}
+.res dl{display:grid;grid-template-columns:repeat(auto-fill,minmax(8.5rem,1fr));gap:.9rem;margin:0}
+.res dt{font-size:.82rem;color:var(--muted)}
+.res dd{margin:0;font-family:Sora,sans-serif;font-weight:600;font-size:1.45rem;font-variant-numeric:tabular-nums}
+.res .lectura{margin:1rem 0 0;padding-left:.8rem;border-left:4px solid var(--mark);max-width:62ch}
+.res .win{color:var(--win)} .res .lose{color:var(--lose)}
+.res .url{font-size:.95rem;word-break:break-all;background:var(--paper);padding:.6rem;border:1px solid var(--grid)}
+.flash{animation:flash .8s ease-out}@keyframes flash{from{background:var(--mark)}to{background:transparent}}
+@media (prefers-reduced-motion:reduce){.flash{animation:none}}
+aside{position:sticky;top:calc(env(safe-area-inset-top,0px) + 1rem);background:var(--console);color:var(--console-ink);padding:1.25rem;border:1.5px solid var(--ink)}
+@media (max-width:960px){aside{position:static}}
+aside h2{font-size:1.15rem}
+aside p,aside li{color:var(--console-dim);font-size:.88rem}
+aside ul{padding-left:1.1rem;margin:.4rem 0 1rem}
+aside label{color:var(--console-ink);margin-top:.6rem}
+aside select,aside textarea{width:100%;background:#0006;color:var(--console-ink);border:1px solid var(--console-dim);padding:.5rem;font:.82rem/1.4 ui-monospace,Menlo,Consolas,monospace}
+aside textarea{min-height:7rem;resize:vertical}
+aside button{background:var(--mark);color:#13294B;border-color:var(--mark)}
+.log{margin-top:1rem;display:grid;gap:.45rem;max-height:22rem;overflow:auto}
+.log pre{margin:0;white-space:pre-wrap;word-break:break-word;font:.75rem/1.4 ui-monospace,Menlo,Consolas,monospace;background:#0008;padding:.5rem;border-left:3px solid var(--console-dim)}
+.log pre.ok{border-color:#3DDC97}.log pre.err{border-color:#FF8A80}.log pre.dl{border-color:var(--mark)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Caja de herramientas de marketing analytics</h1>
+  <p>Calculadoras para campañas digitales: métricas de pauta, LTV y CAC, UTMs y pruebas A/B. Puedes usarlas a mano o pedírselas a un agente de IA en el navegador, que llama a las mismas funciones gracias a WebMCP.</p>
+  <span class="modo" id="modo">Detectando soporte…</span>
+</header>
+
+<div class="layout">
+<div class="sheets">
+
+  <section class="sheet" id="s-metricas">
+    <h2>Métricas de campaña</h2>
+    <p>CTR, CPC, CPM, tasa de conversión, CPA, ROAS y ROI a partir de los datos de la plataforma. Deja vacío lo que no tengas.</p>
+    <form id="f-metricas">
+      <div class="campos">
+        <label>Inversión (S/)<input name="inversion" type="number" step="any" min="0" value="3000"></label>
+        <label>Impresiones<input name="impresiones" type="number" min="0" value="250000"></label>
+        <label>Clics<input name="clics" type="number" min="0" value="4200"></label>
+        <label>Conversiones<input name="conversiones" type="number" min="0" value="126"></label>
+        <label>Ingresos (S/)<input name="ingresos" type="number" step="any" min="0" value="11340"></label>
+      </div>
+      <button type="submit">Calcular métricas</button>
+    </form>
+    <div class="res" id="r-metricas"></div>
+  </section>
+
+  <section class="sheet" id="s-ltv">
+    <h2>LTV y CAC</h2>
+    <p>Cuánto deja un cliente en su vida útil frente a cuánto cuesta conseguirlo.</p>
+    <form id="f-ltv">
+      <div class="campos">
+        <label>Ticket promedio (S/)<input name="ticket_promedio" type="number" step="any" min="0" value="120"></label>
+        <label>Compras por año<input name="compras_por_anio" type="number" step="any" min="0" value="4"></label>
+        <label>Margen bruto (%)<input name="margen_pct" type="number" step="any" min="0" max="100" value="35"></label>
+        <label>Años de retención<input name="anios_retencion" type="number" step="any" min="0" value="2"></label>
+        <label>Inversión en adquisición (S/)<input name="inversion_adquisicion" type="number" step="any" min="0" value="9000"></label>
+        <label>Clientes nuevos<input name="clientes_nuevos" type="number" min="0" value="80"></label>
+      </div>
+      <button type="submit">Calcular LTV y CAC</button>
+    </form>
+    <div class="res" id="r-ltv"></div>
+  </section>
+
+  <section class="sheet" id="s-utm">
+    <h2>Constructor de UTMs</h2>
+    <p>Genera la URL etiquetada y normaliza los valores, porque GA4 distingue mayúsculas de minúsculas.</p>
+    <!-- API declarativa: este formulario es la herramienta construir_utm -->
+    <form id="f-utm" toolname="construir_utm"
+          tooldescription="Construye una URL con parámetros UTM normalizados para medir una campaña en GA4."
+          toolautosubmit>
+      <div class="campos">
+        <label style="grid-column:1/-1">URL de destino<input name="url" type="url" required value="https://www.ejemplo.pe/promo" toolparamdescription="URL completa de destino, con https://"></label>
+        <label>Source<input name="source" required value="facebook" toolparamdescription="Origen del tráfico, por ejemplo facebook, google, newsletter"></label>
+        <label>Medium<input name="medium" required value="paid_social" toolparamdescription="Medio, por ejemplo cpc, email, paid_social"></label>
+        <label>Campaign<input name="campaign" required value="Cyber Octubre 2026" toolparamdescription="Nombre de la campaña"></label>
+        <label>Term<input name="term" toolparamdescription="Palabra clave o segmento, opcional"></label>
+        <label>Content<input name="content" value="video_15s" toolparamdescription="Variante del anuncio o creatividad, opcional"></label>
+      </div>
+      <button type="submit">Construir URL</button>
+    </form>
+    <div class="res" id="r-utm"></div>
+  </section>
+
+  <section class="sheet" id="s-ab">
+    <h2>Significancia de una prueba A/B</h2>
+    <p>Prueba z de dos proporciones: indica si la diferencia en tasa de conversión entre A y B es real o puede ser azar.</p>
+    <form id="f-ab">
+      <div class="campos">
+        <label>Visitantes A<input name="visitantes_a" type="number" min="1" value="5000"></label>
+        <label>Conversiones A<input name="conversiones_a" type="number" min="0" value="150"></label>
+        <label>Visitantes B<input name="visitantes_b" type="number" min="1" value="5000"></label>
+        <label>Conversiones B<input name="conversiones_b" type="number" min="0" value="190"></label>
+        <label>Confianza<select name="confianza"><option>90</option><option selected>95</option><option>99</option></select></label>
+      </div>
+      <button type="submit">Evaluar prueba</button>
+    </form>
+    <div class="res" id="r-ab"></div>
+  </section>
+
+  <section class="sheet" id="s-muestra">
+    <h2>Tamaño de muestra para A/B</h2>
+    <p>Cuántos visitantes necesitas por variante antes de lanzar la prueba, y cuántos días tomará con tu tráfico.</p>
+    <form id="f-muestra">
+      <div class="campos">
+        <label>Tasa de conversión actual (%)<input name="tasa_base_pct" type="number" step="any" min="0" value="3"></label>
+        <label>Mejora mínima a detectar (%)<input name="mejora_minima_pct" type="number" step="any" min="0" value="20"></label>
+        <label>Confianza<select name="confianza"><option>90</option><option selected>95</option><option>99</option></select></label>
+        <label>Potencia<select name="potencia"><option selected>80</option><option>90</option></select></label>
+        <label>Tráfico diario total<input name="trafico_diario" type="number" min="0" value="1200"></label>
+      </div>
+      <button type="submit">Calcular muestra</button>
+    </form>
+    <div class="res" id="r-muestra"></div>
+  </section>
+
+</div>
+
+<aside>
+  <h2>Consola del agente</h2>
+  <p>Así ve un agente esta página: descubre las herramientas y las ejecuta con argumentos en JSON. Cada llamada se registra también en el dataLayer.</p>
+  <p>Con WebMCP activo en Chrome, prueba pedirle a tu asistente:</p>
+  <ul>
+    <li>“Invertí 3 000 soles, tuve 126 ventas por 11 340 soles. ¿Cuál es mi ROAS?”</li>
+    <li>“Arma las UTMs para mi campaña de email del Cyber.”</li>
+    <li>“A tuvo 150 de 5 000 y B 190 de 5 000. ¿Ganó B?”</li>
+  </ul>
+  <label for="selTool">Herramienta</label>
+  <select id="selTool"></select>
+  <label for="args">Argumentos (JSON)</label>
+  <textarea id="args" spellcheck="false"></textarea>
+  <button id="run">Ejecutar como agente</button>
+  <div class="log" id="log" aria-live="polite"></div>
+</aside>
+</div>
+
+<script>
+/* ===== 0. Shim mínimo, solo si el navegador no trae WebMCP ===== */
+const NATIVO = "modelContext" in navigator;
+if (!NATIVO) {
+  const reg = new Map(), mc = new EventTarget();
+  mc.registerTool = (t, o = {}) => {
+    if (reg.has(t.name)) throw new Error(`Ya existe la herramienta ${t.name}`);
+    reg.set(t.name, t); o.signal?.addEventListener("abort", () => mc.unregisterTool(t.name));
+    mc.dispatchEvent(new Event("toolchange"));
+  };
+  mc.unregisterTool = (n) => { reg.delete(n); mc.dispatchEvent(new Event("toolchange")); };
+  mc.getTools = async () => [...reg.values()].map(({ name, description, inputSchema }) => ({ name, description, inputSchema }));
+  mc.executeTool = async (t, json) => reg.get(t.name).execute(JSON.parse(json || "{}"));
+  Object.defineProperty(navigator, "modelContext", { value: mc });
+  // Convierte formularios con toolname en herramientas (Chrome lo hace de forma nativa)
+  document.querySelectorAll("form[toolname]").forEach((form) => {
+    const props = {}, required = [];
+    [...form.elements].filter((el) => el.name).forEach((el) => {
+      props[el.name] = { type: el.type === "number" ? "number" : "string",
+        description: el.getAttribute("toolparamdescription") || el.name,
+        ...(el.tagName === "SELECT" ? { enum: [...el.options].map((o) => o.value) } : {}) };
+      if (el.required) required.push(el.name);
+    });
+    mc.registerTool({
+      name: form.getAttribute("toolname"), description: form.getAttribute("tooldescription"),
+      inputSchema: { type: "object", properties: props, required },
+      execute: (args) => new Promise((resolve) => {
+        form.classList.add("agent-active");
+        [...form.elements].forEach((el) => { if (el.name && el.name in args) el.value = args[el.name]; });
+        const ev = new Event("submit", { cancelable: true });
+        ev.agentInvoked = true; ev.respondWith = (p) => Promise.resolve(p).then(resolve);
+        form.dispatchEvent(ev);
+        setTimeout(() => form.classList.remove("agent-active"), 900);
+      })
+    });
+  });
+}
+document.getElementById("modo").textContent = NATIVO
+  ? "WebMCP nativo del navegador"
+  : "Modo demo: shim local (activa la flag de WebMCP en Chrome para usar el nativo)";
+
+/* ===== 1. Utilidades ===== */
+const $ = (id) => document.getElementById(id);
+const num = (v) => (v === "" || v == null ? NaN : Number(v));
+const div = (a, b) => (Number.isFinite(a) && Number.isFinite(b) && b !== 0 ? a / b : NaN);
+const nf = (v, d = 2) => (Number.isFinite(v) ? v.toLocaleString("es-PE", { maximumFractionDigits: d }) : "—");
+const money = (v) => (Number.isFinite(v) ? "S/ " + nf(v, 2) : "—");
+const pct = (v, d = 2) => (Number.isFinite(v) ? nf(v * 100, d) + "%" : "—");
+const r4 = (v) => (Number.isFinite(v) ? Math.round(v * 1e4) / 1e4 : null);
+const datos = (f) => Object.fromEntries(new FormData(f));
+function erf(x) { const s = Math.sign(x); x = Math.abs(x); const t = 1 / (1 + 0.3275911 * x);
+  return s * (1 - ((((1.061405429 * t - 1.453152027) * t + 1.421413741) * t - 0.284496736) * t + 0.254829592) * t * Math.exp(-x * x)); }
+const Phi = (z) => 0.5 * (1 + erf(z / Math.SQRT2));
+const Z_CONF = { 90: 1.6449, 95: 1.96, 99: 2.5758 }, Z_POT = { 80: 0.8416, 90: 1.2816 };
+
+function pintar(id, filas, lectura = [], extra = "") {
+  const el = $(id);
+  el.innerHTML = (filas.length ? "<dl>" + filas.map(([k, v, c]) => `<div><dt>${k}</dt><dd class="${c || ""}">${v}</dd></div>`).join("") + "</dl>" : "")
+    + extra + lectura.map((t) => `<p class="lectura">${t}</p>`).join("");
+  el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+}
+
+/* ===== 2. Cálculos (funciones puras, las usan la UI y el agente) ===== */
+function metricas(a) {
+  const inv = num(a.inversion), imp = num(a.impresiones), cl = num(a.clics), conv = num(a.conversiones), ing = num(a.ingresos);
+  const r = { ctr: div(cl, imp), cpc: div(inv, cl), cpm: div(inv, imp) * 1000, tasa_conversion: div(conv, cl),
+    cpa: div(inv, conv), roas: div(ing, inv), roi: div(ing - inv, inv) };
+  const lectura = [];
+  if (Number.isFinite(r.roas)) lectura.push(r.roas >= 1
+    ? `Por cada S/ 1 invertido regresan S/ ${nf(r.roas)} en ingresos.`
+    : `El ROAS es menor a 1: los ingresos no alcanzan a cubrir la inversión publicitaria.`);
+  if (Number.isFinite(r.roi)) lectura.push("Ojo: este ROI usa ingresos, no margen. Para ver rentabilidad real, descuenta el costo del producto.");
+  return { ...Object.fromEntries(Object.entries(r).map(([k, v]) => [k, r4(v)])), lectura };
+}
+function vistaMetricas(r) {
+  return [[["CTR", pct(r.ctr)], ["CPC", money(r.cpc)], ["CPM", money(r.cpm)], ["Tasa de conversión", pct(r.tasa_conversion)],
+    ["CPA", money(r.cpa)], ["ROAS", Number.isFinite(r.roas) ? nf(r.roas) + "x" : "—", r.roas >= 1 ? "win" : r.roas != null ? "lose" : ""],
+    ["ROI", pct(r.roi), r.roi >= 0 ? "win" : r.roi != null ? "lose" : ""]], r.lectura];
+}
+
+function ltvCac(a) {
+  const t = num(a.ticket_promedio), f = num(a.compras_por_anio), m = num(a.margen_pct) / 100, y = num(a.anios_retencion);
+  const inv = num(a.inversion_adquisicion), n = num(a.clientes_nuevos);
+  const margenAnual = t * f * m, ltv = margenAnual * y, cac = div(inv, n), ratio = div(ltv, cac), payback = div(cac, margenAnual / 12);
+  const lectura = [];
+  if (Number.isFinite(ratio)) lectura.push(ratio >= 3 ? "Relación sana: la regla práctica pide un LTV de al menos 3 veces el CAC."
+    : ratio < 1 ? "Cada cliente cuesta más de lo que deja. Revisa el costo de adquisición o mejora la retención."
+    : "La relación es positiva pero ajustada. Hay poco margen para cubrir costos fijos.");
+  if (Number.isFinite(payback)) lectura.push(`Recuperas lo invertido en cada cliente en unos ${nf(payback, 1)} meses.`);
+  return { ltv: r4(ltv), cac: r4(cac), ltv_cac: r4(ratio), payback_meses: r4(payback), lectura };
+}
+function vistaLtv(r) {
+  return [[["LTV (margen)", money(r.ltv)], ["CAC", money(r.cac)],
+    ["LTV / CAC", Number.isFinite(r.ltv_cac) ? nf(r.ltv_cac) + " : 1" : "—", r.ltv_cac >= 3 ? "win" : r.ltv_cac < 1 ? "lose" : ""],
+    ["Payback", Number.isFinite(r.payback_meses) ? nf(r.payback_meses, 1) + " meses" : "—"]], r.lectura];
+}
+
+const MEDIUMS = ["cpc", "cpm", "display", "email", "social", "paid_social", "organic", "referral", "affiliate", "video", "sms", "push", "audio"];
+function utm(a) {
+  const norm = (s) => String(s || "").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, "_");
+  if (!a.source || !a.medium || !a.campaign) return { ok: false, error: "source, medium y campaign son obligatorios." };
+  let u; try { u = new URL(String(a.url).trim()); } catch { return { ok: false, error: "La URL no es válida. Escríbela completa, con https://" }; }
+  const avisos = [];
+  for (const [k, v] of Object.entries({ utm_source: a.source, utm_medium: a.medium, utm_campaign: a.campaign, utm_term: a.term, utm_content: a.content })) {
+    if (!v) continue;
+    const n = norm(v);
+    if (n !== String(v)) avisos.push(`${k}: “${v}” se normalizó a “${n}”.`);
+    u.searchParams.set(k, n);
+  }
+  if (!MEDIUMS.includes(norm(a.medium))) avisos.push(`“${norm(a.medium)}” no es un medium habitual. Verifica que GA4 lo agrupe en el canal que esperas.`);
+  return { ok: true, url: u.toString(), avisos };
+}
+
+function abTest(a) {
+  const nA = num(a.visitantes_a), cA = num(a.conversiones_a), nB = num(a.visitantes_b), cB = num(a.conversiones_b), conf = num(a.confianza) || 95;
+  if (!(nA > 0 && nB > 0) || cA > nA || cB > nB || cA < 0 || cB < 0) return { ok: false, error: "Revisa los datos: las conversiones no pueden superar a los visitantes." };
+  const pA = cA / nA, pB = cB / nB, p = (cA + cB) / (nA + nB), se = Math.sqrt(p * (1 - p) * (1 / nA + 1 / nB));
+  const z = se ? (pB - pA) / se : 0, pv = 2 * (1 - Phi(Math.abs(z))), sig = pv < 1 - conf / 100;
+  const ganador = sig ? (pB > pA ? "B" : "A") : "ninguno";
+  const lectura = [sig
+    ? `Con ${conf}% de confianza, la variante ${ganador} convierte mejor (p = ${nf(pv, 4)}).`
+    : `No hay evidencia suficiente para declarar un ganador (p = ${nf(pv, 4)}). Deja correr la prueba o revisa el tamaño de muestra.`];
+  return { ok: true, tasa_a: r4(pA), tasa_b: r4(pB), mejora_relativa: r4(div(pB - pA, pA)), z: r4(z), p_valor: r4(pv), significativo: sig, ganador, lectura };
+}
+function vistaAb(r) {
+  return [[["Tasa A", pct(r.tasa_a)], ["Tasa B", pct(r.tasa_b)], ["Mejora de B vs A", pct(r.mejora_relativa), r.mejora_relativa >= 0 ? "win" : "lose"],
+    ["Valor p", nf(r.p_valor, 4)], ["Ganador", r.ganador, r.significativo ? "win" : ""]], r.lectura];
+}
+
+function muestra(a) {
+  const p1 = num(a.tasa_base_pct) / 100, mde = num(a.mejora_minima_pct) / 100, za = Z_CONF[num(a.confianza) || 95], zb = Z_POT[num(a.potencia) || 80];
+  if (!(p1 > 0 && p1 < 1 && mde > 0) || !za || !zb) return { ok: false, error: "La tasa base debe estar entre 0 y 100 y la mejora mínima debe ser mayor a 0." };
+  const p2 = p1 * (1 + mde); if (p2 >= 1) return { ok: false, error: "La tasa esperada supera el 100%. Reduce la mejora mínima." };
+  const pb = (p1 + p2) / 2;
+  const n = Math.ceil((za * Math.sqrt(2 * pb * (1 - pb)) + zb * Math.sqrt(p1 * (1 - p1) + p2 * (1 - p2))) ** 2 / (p2 - p1) ** 2);
+  const dias = Math.ceil(div(2 * n, num(a.trafico_diario)));
+  const lectura = [`Para detectar un salto de ${pct(p1)} a ${pct(p2)} necesitas ${nf(n, 0)} visitantes por variante.`];
+  if (Number.isFinite(dias)) lectura.push(`Con tu tráfico, la prueba tomaría unos ${nf(dias, 0)} días. Conviene cubrir al menos una o dos semanas completas.`);
+  return { ok: true, tasa_esperada: r4(p2), visitantes_por_variante: n, visitantes_totales: 2 * n, dias_estimados: Number.isFinite(dias) ? dias : null, lectura };
+}
+function vistaMuestra(r) {
+  return [[["Por variante", nf(r.visitantes_por_variante, 0)], ["Total", nf(r.visitantes_totales, 0)],
+    ["Días estimados", r.dias_estimados ?? "—"], ["Tasa esperada B", pct(r.tasa_esperada)]], r.lectura];
+}
+
+/* ===== 3. Registro: UI + herramientas imperativas desde una sola tabla ===== */
+const num_ = (description, extra = {}) => ({ type: "number", description, ...extra });
+const HERRAMIENTAS = [
+  { name: "calcular_metricas_campana", form: "f-metricas", out: "r-metricas", fn: metricas, vista: vistaMetricas,
+    description: "Calcula CTR, CPC, CPM, tasa de conversión, CPA, ROAS y ROI de una campaña. Montos en soles.",
+    schema: { inversion: num_("Inversión publicitaria"), impresiones: num_("Impresiones"), clics: num_("Clics"),
+      conversiones: num_("Conversiones o ventas"), ingresos: num_("Ingresos atribuidos") }, required: [] },
+  { name: "calcular_ltv_cac", form: "f-ltv", out: "r-ltv", fn: ltvCac, vista: vistaLtv,
+    description: "Calcula LTV basado en margen, CAC, la relación LTV/CAC y los meses de payback.",
+    schema: { ticket_promedio: num_("Valor promedio de compra"), compras_por_anio: num_("Compras por cliente al año"),
+      margen_pct: num_("Margen bruto en porcentaje, 0 a 100"), anios_retencion: num_("Años que el cliente sigue comprando"),
+      inversion_adquisicion: num_("Gasto total en adquirir clientes"), clientes_nuevos: num_("Clientes nuevos obtenidos") },
+    required: ["ticket_promedio", "compras_por_anio", "margen_pct", "anios_retencion"] },
+  { name: "evaluar_prueba_ab", form: "f-ab", out: "r-ab", fn: abTest, vista: vistaAb,
+    description: "Evalúa si la diferencia de conversión entre las variantes A y B es estadísticamente significativa (prueba z de dos proporciones).",
+    schema: { visitantes_a: num_("Visitantes de A"), conversiones_a: num_("Conversiones de A"), visitantes_b: num_("Visitantes de B"),
+      conversiones_b: num_("Conversiones de B"), confianza: num_("Nivel de confianza", { enum: [90, 95, 99] }) },
+    required: ["visitantes_a", "conversiones_a", "visitantes_b", "conversiones_b"] },
+  { name: "calcular_tamano_muestra_ab", form: "f-muestra", out: "r-muestra", fn: muestra, vista: vistaMuestra,
+    description: "Calcula cuántos visitantes por variante necesita una prueba A/B y cuántos días tomará.",
+    schema: { tasa_base_pct: num_("Tasa de conversión actual en porcentaje"), mejora_minima_pct: num_("Mejora relativa mínima a detectar, en porcentaje"),
+      confianza: num_("Nivel de confianza", { enum: [90, 95, 99] }), potencia: num_("Potencia estadística", { enum: [80, 90] }),
+      trafico_diario: num_("Visitantes diarios totales disponibles para la prueba") },
+    required: ["tasa_base_pct", "mejora_minima_pct"] }
+];
+
+function correr(h, fuente) {
+  const r = h.fn(datos($(h.form)));
+  if (r.ok === false) { pintar(h.out, [], [r.error]); return r; }
+  const [filas, lectura] = h.vista(r); pintar(h.out, filas, lectura);
+  return r;
+}
+HERRAMIENTAS.forEach((h) => {
+  const form = $(h.form);
+  form.addEventListener("submit", (e) => { e.preventDefault(); correr(h); });
+  navigator.modelContext.registerTool({
+    name: h.name, description: h.description,
+    inputSchema: { type: "object", properties: h.schema, required: h.required },
+    annotations: { readOnlyHint: true },
+    execute: async (args) => {
+      Object.entries(args).forEach(([k, v]) => { if (form.elements[k]) form.elements[k].value = v; });
+      form.classList.add("agent-active"); setTimeout(() => form.classList.remove("agent-active"), 900);
+      $(h.form).closest(".sheet").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+      return correr(h);
+    }
+  });
+});
+
+/* ===== 4. UTM: formulario declarativo, sirve igual a humanos y agentes ===== */
+$("f-utm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const r = utm(datos(e.target));
+  if (!r.ok) pintar("r-utm", [], [r.error]);
+  else pintar("r-utm", [], r.avisos, `<div class="url" id="utmUrl">${r.url.replace(/&/g, "&amp;").replace(/</g, "&lt;")}</div><button type="button" class="sec" id="copiar" style="margin-left:0">Copiar URL</button>`);
+  $("copiar")?.addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(r.url); $("copiar").textContent = "URL copiada"; } catch { $("copiar").textContent = "Selecciona y copia manualmente"; }
+  });
+  if (e.agentInvoked) e.respondWith(Promise.resolve(r));
+});
+
+/* ===== 5. Consola del agente + dataLayer ===== */
+const dataLayer = (window.dataLayer = window.dataLayer || []);
+const EJEMPLOS = {
+  calcular_metricas_campana: { inversion: 3000, impresiones: 250000, clics: 4200, conversiones: 126, ingresos: 11340 },
+  calcular_ltv_cac: { ticket_promedio: 120, compras_por_anio: 4, margen_pct: 35, anios_retencion: 2, inversion_adquisicion: 9000, clientes_nuevos: 80 },
+  construir_utm: { url: "https://www.ejemplo.pe/cyber", source: "Newsletter", medium: "email", campaign: "Cyber Octubre", content: "boton_hero" },
+  evaluar_prueba_ab: { visitantes_a: 5000, conversiones_a: 150, visitantes_b: 5000, conversiones_b: 190, confianza: 95 },
+  calcular_tamano_muestra_ab: { tasa_base_pct: 3, mejora_minima_pct: 20, confianza: 95, potencia: 80, trafico_diario: 1200 }
+};
+function log(t, c) { const p = document.createElement("pre"); p.className = c; p.textContent = t; $("log").prepend(p); }
+const ponerEjemplo = () => { $("args").value = JSON.stringify(EJEMPLOS[$("selTool").value] || {}, null, 2); };
+async function refrescar() {
+  const tools = await navigator.modelContext.getTools();
+  const sel = $("selTool").value;
+  $("selTool").innerHTML = tools.map((t) => `<option>${t.name}</option>`).join("");
+  if (sel && tools.some((t) => t.name === sel)) $("selTool").value = sel; else ponerEjemplo();
+}
+navigator.modelContext.addEventListener?.("toolchange", refrescar);
+$("selTool").addEventListener("change", ponerEjemplo);
+$("run").addEventListener("click", async () => {
+  const tool = (await navigator.modelContext.getTools()).find((t) => t.name === $("selTool").value);
+  let json; try { json = JSON.stringify(JSON.parse($("args").value || "{}")); }
+  catch { log("El JSON no es válido. Revisa comas, llaves y comillas dobles.", "err"); return; }
+  const t0 = performance.now(); log(`→ ${tool.name}(${json})`, "");
+  let status = "success";
+  try {
+    const res = await navigator.modelContext.executeTool(tool, json);
+    if (res && res.ok === false) status = "invalid_input";
+    log("← " + (typeof res === "string" ? res : JSON.stringify(res, null, 2)), status === "success" ? "ok" : "err");
+  } catch (err) { status = "error"; log("✕ " + err.message, "err"); }
+  const ev = { event: "webmcp_tool_call", tool_name: tool.name, status, duration_ms: Math.round(performance.now() - t0), invoker: "agent" };
+  dataLayer.push(ev); log("dataLayer.push(" + JSON.stringify(ev) + ")", "dl");
+});
+
+HERRAMIENTAS.forEach((h) => correr(h));
+refrescar().then(ponerEjemplo);
+</script>
+</body>
+</html>
